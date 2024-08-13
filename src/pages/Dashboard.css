@@ -1,0 +1,84 @@
+/* Estilos para el Sider */
+.sider {
+    background: #026A9F !important; /* Color de fondo oscuro */
+    transition: all 0.3s;
+  }
+  
+  .logo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: #026A9F; /* Fondo del logo */
+  }
+  
+  .logo-image {
+    height: 32px;
+    width: auto;
+  }
+  
+  .trigger {
+    font-size: 16px;
+    color: #fff;
+  }
+  .trigger:hover {
+    font-size: 16px;
+    color: #fff;
+  }
+  /* Estilos para el Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .header-logo-image {
+    height: 32px;
+    margin-right: 16px;
+  }
+  
+  .menu-toggle {
+    font-size: 16px;
+    color: #000;
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .notification-icon {
+    font-size: 18px;
+    margin-right: 16px;
+    color: #000;
+  }
+  
+  .profile-icon {
+    background-color: #f0f0f0;
+    color: #000;
+  }
+  
+  /* Estilos para el contenedor de contenido */
+  .content-container {
+    display: block;
+    gap: 16px;
+    padding: 24px;
+    min-height: 360px;
+    
+  }
+  
+  .content-card {
+    margin: 20px;
+    flex: 1;
+    min-width: 300px; /* Ancho mínimo para las tarjetas */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  

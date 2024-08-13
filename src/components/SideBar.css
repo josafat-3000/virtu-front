@@ -1,0 +1,38 @@
+/* Sidebar.css */
+
+.sidebar {
+    background: #026A9F;
+    transition: all 0.3s;
+    position: fixed;
+    left: 0;
+    height: 100%;
+    z-index: 999;
+  }
+  
+  .logo {
+    height: 64px;
+    background: #026A9F;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .toggle-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 1000;
+  }
+  
+  .ant-layout-content {
+    margin-left: 200px; /* Ajusta según el tamaño de la barra lateral */
+    transition: margin-left 0.3s;
+  }
+  
+  .ant-layout-sider-collapsed + .ant-layout .ant-layout-content {
+    margin-left: 80px; /* Ajusta según el tamaño de la barra lateral colapsada */
+  }
+  
