@@ -58,13 +58,28 @@ const columns = [
 
 ];
 
-const profileMenu = (
-  <Menu>
-    <Menu.Item key="1">Profile</Menu.Item>
-    <Menu.Item key="2">Settings</Menu.Item>
-    <Menu.Item key="3">Logout</Menu.Item>
-  </Menu>
-);
+const profileMenu = [
+  {
+    key: 'opc',
+    icon: <Avatar icon={<UserOutlined />} />,
+    children: [
+      {
+        key: '1',
+        label: 'Configuración',
+        icon: <UserOutlined />,
+      },
+      {
+        key: '2',
+        label: 'Configuración',
+        icon: <SettingOutlined />,
+      },
+      {
+        key: '3',
+        label: 'Salir',
+        icon: <LogoutOutlined />,
+      },]
+  }
+];
 
 const Dash = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -99,7 +114,7 @@ const Dash = () => {
     }}>
       <Layout style={{ minHeight: '100vh' }}>
         <Sider
-        
+
           collapsible
           collapsed={collapsed}
           onCollapse={(value) => setCollapsed(value)}
@@ -114,7 +129,7 @@ const Dash = () => {
             scrollbarColor: 'unset',
           }}
         >
-          
+
           <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
         </Sider>
         <Layout
@@ -131,12 +146,10 @@ const Dash = () => {
               justifyContent: 'space-between',
               alignItems: 'center',
               padding: '0 16px',
-              background: '#fff',
               position: 'sticky',
               top: 0,
               zIndex: 1,
               width: 'calc(100%-${collapsed ? 80px : 200px})',
-              display: 'flex',
               background: colorBgContainer,
               borderRadius: '10px',
               boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.2)'
@@ -151,10 +164,7 @@ const Dash = () => {
                 icon={<BellOutlined />}
                 className="notification-icon"
               />
-              <Menu>
-                <Menu.SubMenu title={<Avatar icon={<UserOutlined />} />} popupOffset={[0, 0]}>
-                  {profileMenu.props.children}
-                </Menu.SubMenu>
+              <Menu items={profileMenu}>
               </Menu>
             </div>
           </Header>
