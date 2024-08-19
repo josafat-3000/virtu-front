@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LoginForm from './pages/Login'; // Asegúrate de que la ruta sea correcta
-import RegisterForm from './pages/Register'; // Asegúrate de que la ruta sea correcta
+import LoginForm from './pages/Login/Login'; // Asegúrate de que la ruta sea correcta
+import RegisterForm from './pages/Register/Register'; // Asegúrate de que la ruta sea correcta
 import './App.css'; // Archivo de estilos globales, si tienes uno
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/Dashboard/Dashboard';
 import ProtectedRoute from "./components/Protected";
 const App = () => {
   return (

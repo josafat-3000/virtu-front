@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, BellOutlined, HomeOutlined, CalendarOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons';
+import {
+  EyeOutlined, ClockCircleOutlined, UserOutlined, BellOutlined, HomeOutlined, CalendarOutlined, SettingOutlined, LogoutOutlined
+} from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme, Typography } from 'antd';
-import { Card, Avatar, Button, Table, Empty, Spin, ConfigProvider } from 'antd';
-import logo from '../assets/virtu.png';
+import { Card, Avatar, Button, Table, Empty, Statistic, ConfigProvider, Row, Col, Space } from 'antd';
+import logo from '../../assets/virtu.png';
 import { Link } from 'react-router-dom';
 import './Dashboard.css'; // Ajusta el camino según tu estructura de archivos
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 const { Header, Content, Footer, Sider } = Layout;
 const { Title } = Typography;
+import { fetchVisitStats } from '../../store/visitSlice.js';
+
 
 function getItem(label, key, icon, children) {
   return {
@@ -21,6 +25,7 @@ function getItem(label, key, icon, children) {
 const items = [
   getItem('Home', '1', <HomeOutlined />),
   getItem('Registros', '2', <CalendarOutlined />),
+  getItem('Acciones', '6', <BellOutlined />),
   getItem('Perfil', '3', <UserOutlined />),
   getItem('Configuración', '4', <SettingOutlined />),
   getItem('Salir', '5', <LogoutOutlined />),
@@ -90,6 +95,9 @@ const Dash = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const user = useSelector((state) => state.user.user.name);
+  const dispatch = useDispatch();
+
+  const { pending, in_progress, load, error } = useSelector((state) => state.visits);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -99,7 +107,13 @@ const Dash = () => {
       setData([]);
       setLoading(false);
     }, 1000);
-  }, []);
+    dispatch(fetchVisitStats());
+  }, [dispatch]);
+
+  const chartData = [
+    { name: 'Pending Visits', value: pending },
+    { name: 'In Progress Visits', value: in_progress },
+  ];
 
   return (
     <ConfigProvider theme={{
@@ -167,62 +181,132 @@ const Dash = () => {
               />
               <Menu items={profileMenu}>
               </Menu>
+
+
             </div>
           </Header>
           <Content style={{ margin: '16px' }}>
-            <Breadcrumb
-              style={{ margin: '16px 0' }}
-              items={[
-                { title: <Link to="/">Home</Link> },
-                { title: <Link to="/">Application Center</Link> },
-                { title: <Link to="/">Application List</Link> },
-                { title: 'An Application' },
-              ]}
-            />
-            <div
-              style={{
-                padding: 24,
-                minHeight: 360,
-                background: colorBgContainer,
-                borderRadius: borderRadiusLG,
-              }}
-            >
               {user && (
-                <Title level={2}>Hello, {user}</Title>
+                <Title level={3}>Bienvenido, {user}</Title>
               )}
-            </div>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={12} md={12} lg={6}>
+                <DashboardCard
+                  icon={
+                    <EyeOutlined
+                      style={{
+                        color: "purple",
+                        backgroundColor: "rgba(0,255,255,0.25)",
+                        borderRadius: 20,
+                        fontSize: 24,
+                        padding: 8,
+                      }}
+                    />
+                  }
+                  title={"Visitas presentes"}
+                  value={in_progress}
+                />
+              </Col>
+
+              <Col xs={24} sm={12} md={12} lg={6}>
+                <DashboardCard
+                  icon={
+                    <ClockCircleOutlined
+                      style={{
+                        color: "orange",
+                        backgroundColor: "rgba(255,165,0,0.25)",
+                        borderRadius: 20,
+                        fontSize: 24,
+                        padding: 8,
+                      }}
+                    />
+                  }
+                  title={"Visitas esperadas"}
+                  value={pending}
+                />
+              </Col>
+
+              <Col xs={24} sm={12} md={12} lg={6}>
+                <DashboardCard
+                  icon={
+                    <LogoutOutlined
+                      style={{
+                        color: "green",
+                        backgroundColor: "rgba(0,255,0,0.25)",
+                        borderRadius: 20,
+                        fontSize: 24,
+                        padding: 8,
+                      }}
+                    />
+                  }
+                  title={"Salidas"}
+                  value={0}
+                />
+              </Col>
+
+              <Col xs={24} sm={12} md={12} lg={6}>
+                <DashboardCard
+                  icon={
+                    <CalendarOutlined
+                      style={{
+                        color: "blue",
+                        backgroundColor: "rgba(0,0,255,0.25)",
+                        borderRadius: 20,
+                        fontSize: 24,
+                        padding: 8,
+                      }}
+                    />
+                  }
+                  title={"Visitas totales del día"}
+                  value={0}
+                />
+              </Col>
+            </Row>
+
           </Content>
-          <Content style={{ margin: '16px', paddingTop: '30px' }}>
+
+          <Content style={{ margin: '16px' }}>
             <div className="content-container">
               <Card title="Eventos recientes" className="content-card">
-                {loading ? (
-                  <Spin size="large" />
-                ) : (
-                  <Table
-                    columns={columns}
-                    dataSource={data}
-                    locale={{
-                      emptyText: <Empty description="No hay datos disponibles" />,
-                    }}
-                    rowKey="id"
-                  />
-                )}
-              </Card>
-              <Card title="Generar Visita" className="content-card">
-                Generar Visita
-              </Card>
-              <Card title="Validar Visita" className="content-card">
-                Validar Visita
+                <Table
+                  columns={columns}
+                  dataSource={data}
+                  locale={{
+                    emptyText: <Empty description="No hay datos disponibles" />,
+                  }}
+                  rowKey="id"
+                />
               </Card>
             </div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>
-            Ant Design ©{new Date().getFullYear()} Created by Ant UED
+            Virtu ©{new Date().getFullYear()}
           </Footer>
         </Layout>
       </Layout>
     </ConfigProvider>
   );
 };
+
+function DashboardCard({ title, value, icon }) {
+  return (
+    <Card
+      style={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        borderRadius: '10px',
+        boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.2)'
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        {icon}
+        <Statistic title={title} value={value} style={{ marginLeft: 16 }} />
+      </div>
+    </Card>
+  );
+}
+
 
 export default Dash;

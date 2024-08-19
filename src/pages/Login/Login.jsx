@@ -1,42 +1,57 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Card, Typography, Row, Col, Alert } from 'antd';
+import { Form, Input, Button, Card, Typography, Row, Col } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import './LoginForm.css'; // Archivo de estilos
-import logo from '../assets/virtu.png'; // Ruta de la imagen del logo
+import logo from '../../assets/virtu.png'; // Ruta de la imagen del logo
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../store/userSlice';
-
 const { Title } = Typography;
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from '../../store/userSlice';
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [formError, setFormError] = useState('');
-  const { loading, error, user } = useSelector((state) => state.user); // Ahora también obtenemos el estado `user`
+  const [error, setError] = useState('');
+
+
+  const { loading, err } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  // Maneja el envío del formulario
-  const handleSignIn = async () => {
-    setFormError('');
 
-    const data = { email, password };
-    const result = await dispatch(loginUser(data));
+  const handleSignIn = async (values) => {
+    setError('');
 
-    if (loginUser.fulfilled.match(result)) {
-      setEmail('');
-      setPassword('');
-      navigate('/'); // Redirige al home o dashboard
-    } else if (loginUser.rejected.match(result)) {
-      setFormError(result.error.message);
+    let data = { email, password };
+    dispatch(loginUser(data)).then((result) => {
+      if (result.payload) {
+        setEmail('');
+        setPassword('');
+        navigate('/');
+      } else {
+        navigate('/login');
+      }
+    });
+
+    // Aquí iría la lógica para iniciar sesión, por ejemplo:
+    // const { data, error } = await supabase.auth.signInWithPassword({
+    //   email: values.email,
+    //   password: values.password,
+    // });
+
+    if (error) {
+      setError(error.message);
+    } else {
+      navigate('/');
     }
   };
 
   return (
     <Row justify="center" align="middle" className="login-container">
       <Col xs={22} sm={18} md={12} lg={10} xl={8}>
-        <Card className="login-card">
+        <Card
+          className="login-card"
+        >
           <div className="login-logo">
             <img src={logo} alt="Logo" className="logo-image" />
             <LockOutlined className="lock-icon" />
@@ -55,10 +70,7 @@ const LoginForm = () => {
           >
             <Form.Item
               name="email"
-              rules={[
-                { required: true, message: 'Por favor, introduce tu correo electrónico' },
-                { type: 'email', message: 'El correo electrónico no es válido' }
-              ]}
+              rules={[{ required: true, message: 'Por favor, introduce tu correo electrónico' }]}
             >
               <Input
                 prefix={<UserOutlined />}
@@ -80,9 +92,9 @@ const LoginForm = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Item>
-            {formError && (
+            {error && (
               <Typography.Text type="danger" className="login-error">
-                {formError}
+                {error}
               </Typography.Text>
             )}
             <Form.Item className="login-remember">
@@ -94,19 +106,10 @@ const LoginForm = () => {
                 htmlType="submit"
                 className="login-button"
                 size="large"
-                loading={loading} // Maneja el estado de carga
               >
-                Iniciar Sesión
+                {loading ? 'Iniciando sesión' : 'Iniciar Sesión'}
               </Button>
-              {error && (
-                <Alert
-                  message="Error"
-                  description="Error al iniciar sesión."
-                  type="error"
-                  showIcon
-                  className="login-error-alert"
-                />
-              )}
+              {err && (<div>Error</div>)}
             </Form.Item>
           </Form>
           <Typography.Text className="login-register">

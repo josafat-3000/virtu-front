@@ -69,14 +69,12 @@
   /* Estilos para el contenedor de contenido */
   .content-container {
     display: block;
-    gap: 16px;
-    padding: 24px;
+    padding: 0;
     min-height: 360px;
     
   }
   
   .content-card {
-    margin: 20px;
     flex: 1;
     min-width: 300px; /* Ancho mínimo para las tarjetas */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
