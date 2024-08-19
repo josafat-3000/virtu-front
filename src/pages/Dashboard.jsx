@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, BellOutlined, HomeOutlined, CalendarOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Breadcrumb, Layout, Menu, theme, Typography } from 'antd';
 import { Card, Avatar, Button, Table, Empty, Spin, ConfigProvider } from 'antd';
 import logo from '../assets/virtu.png';
-const { Header, Content, Footer, Sider } = Layout;
+import { Link } from 'react-router-dom';
 import './Dashboard.css'; // Ajusta el camino según tu estructura de archivos
+import { useSelector } from 'react-redux';
+const { Header, Content, Footer, Sider } = Layout;
+const { Title } = Typography;
 
 function getItem(label, key, icon, children) {
   return {
@@ -81,40 +84,39 @@ const profileMenu = [
   }
 ];
 
+
 const Dash = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const user = useSelector((state) => state.user.user.name);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-  // Simula una llamada a una API para cargar datos
+
   useEffect(() => {
     setTimeout(() => {
-      // Simular datos vacíos
       setData([]);
       setLoading(false);
     }, 1000);
   }, []);
 
-
   return (
     <ConfigProvider theme={{
-      "components": {
-        "Layout": {
-          "headerBg": "rgb(2,106,159)",
-          "siderBg": "rgb(2,106,159)",
-          "triggerBg": "rgb(40,75,124)"
+      components: {
+        Layout: {
+          headerBg: "rgb(2,106,159)",
+          siderBg: "rgb(2,106,159)",
+          triggerBg: "rgb(40,75,124)",
         },
-        "Menu": {
-          "darkItemBg": "rgb(2,106,159)",
-          "darkItemSelectedBg": "rgb(40,75,124)"
-        }
-      }
+        Menu: {
+          darkItemBg: "rgb(2,106,159)",
+          darkItemSelectedBg: "rgb(40,75,124)",
+        },
+      },
     }}>
       <Layout style={{ minHeight: '100vh' }}>
         <Sider
-
           collapsible
           collapsed={collapsed}
           onCollapse={(value) => setCollapsed(value)}
@@ -129,13 +131,12 @@ const Dash = () => {
             scrollbarColor: 'unset',
           }}
         >
-
           <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
         </Sider>
         <Layout
           style={{
-            marginInlineStart: collapsed ? '80px' : '200px', // Ajusta los valores según el estado colapsado
-            transition: 'margin-inline-start 0.2s', // Agrega una transición suave para el margen
+            marginInlineStart: collapsed ? '80px' : '200px',
+            transition: 'margin-inline-start 0.2s',
           }}
         >
           <Header
@@ -168,28 +169,14 @@ const Dash = () => {
               </Menu>
             </div>
           </Header>
-          <Content
-            style={{
-              margin: '16px',
-            }}
-          >
+          <Content style={{ margin: '16px' }}>
             <Breadcrumb
-              style={{
-                margin: '16px 0',
-              }}
+              style={{ margin: '16px 0' }}
               items={[
-                {
-                  title: 'Home',
-                },
-                {
-                  title: <a href="">Application Center</a>,
-                },
-                {
-                  title: <a href="">Application List</a>,
-                },
-                {
-                  title: 'An Application',
-                },
+                { title: <Link to="/">Home</Link> },
+                { title: <Link to="/">Application Center</Link> },
+                { title: <Link to="/">Application List</Link> },
+                { title: 'An Application' },
               ]}
             />
             <div
@@ -200,7 +187,9 @@ const Dash = () => {
                 borderRadius: borderRadiusLG,
               }}
             >
-              Bill is a cat.
+              {user && (
+                <Title level={2}>Hello, {user}</Title>
+              )}
             </div>
           </Content>
           <Content style={{ margin: '16px', paddingTop: '30px' }}>
@@ -213,7 +202,7 @@ const Dash = () => {
                     columns={columns}
                     dataSource={data}
                     locale={{
-                      emptyText: <Empty description="No hay datos disponibles" />
+                      emptyText: <Empty description="No hay datos disponibles" />,
                     }}
                     rowKey="id"
                   />
@@ -227,15 +216,11 @@ const Dash = () => {
               </Card>
             </div>
           </Content>
-          <Footer
-            style={{
-              textAlign: 'center',
-            }}
-          >
+          <Footer style={{ textAlign: 'center' }}>
             Ant Design ©{new Date().getFullYear()} Created by Ant UED
           </Footer>
         </Layout>
-      </Layout >
+      </Layout>
     </ConfigProvider>
   );
 };

@@ -1,42 +1,54 @@
+// userSlice.js
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const loginUser = createAsyncThunk("user/login", async (payload, { dispatch }) => {
-    'user/loginUser',
-        async (data) => {
-            const request = await axios('http://localhost:3000/api/login', data);
-        }
-});
+export const loginUser = createAsyncThunk(
+  "user/login",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/api/v1/auth/login',
+        data,
+        { withCredentials: true }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 const userSlice = createSlice({
-    name: "user",
-    initialState: {
-        user: null,
-        loading: false,
-        error: null,
+  name: "user",
+  initialState: {
+    user: null,
+    loading: false,
+    error: null,
+  },
+  reducers: {
+    logout: (state) => {
+      state.user = null;
     },
-    extraReducers:(builder)=> {
-        builder
-        .addCase(loginUser.pending, (state) => {
-            state.loading = true;
-            state.user = null;
-            state.error = null;
-        })
-        .addCase(loginUser.fulfilled, (state, action) => {
-            state.loading = false;
-            state.user = action.payload;
-            state.error = null;
-        })
-        .addCase(loginUser.rejected, (state, action) => {
-            state.loading = false;
-            state.user = null;
-            console.log(action.error.message);
-            if(action.error.message === '401 Unauthorized') {
-                state.error = 'Credenciales incorrectas';
-            }else {
-                state.error = action.error.message;
-            }
-            
-        });
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.user = null;
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.user = null;
+        state.error = action.payload?.message || 'Error al iniciar sesión';
+      });
+  },
 });
+
+export const { logout } = userSlice.actions;
 export default userSlice.reducer;
