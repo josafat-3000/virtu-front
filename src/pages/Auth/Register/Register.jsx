@@ -19,12 +19,6 @@ const RegisterForm = () => {
     setError('');
     setSuccess('');
 
-    // Aquí iría la lógica para registrar al usuario, por ejemplo:
-    // const { data, error } = await supabase.auth.signUp({
-    //   email: values.email,
-    //   password: values.password,
-    // });
-
     if (error) {
       setError(error.message);
     } else {

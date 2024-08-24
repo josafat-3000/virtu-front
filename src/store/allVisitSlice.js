@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+const BACKEND_URL = import.meta.env.BACKEND_URL;
 
 export const fetchAllVisits = createAsyncThunk('visits/fetchAllVisits', async () => {
-    const response = await axios.get(`${process.env.BACKEND_URL}visits`,{ withCredentials: true }); // Asegúrate de que el endpoint sea correcto
+    const response = await axios.get(`${BACKEND_URL}visits`,{ withCredentials: true }); // Asegúrate de que el endpoint sea correcto
     return response.data;
   });
 
