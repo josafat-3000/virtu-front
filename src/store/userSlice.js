@@ -7,7 +7,7 @@ export const loginUser = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `https://virtu-back.onrender.com/auth/login`, //corregir en produccion 
+        `https://virtu-back.onrender.com/api/v1/auth/login`, //corregir en produccion 
         data,
         { withCredentials: true }
       );
