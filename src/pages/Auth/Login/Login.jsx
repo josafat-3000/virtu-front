@@ -3,7 +3,7 @@ import { Form, Input, Button, Card, Typography, Row, Col, message } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import './LoginForm.css';
 import logo from '../../../assets/virtu.png';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,  Link} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../../store/userSlice';
 
@@ -94,7 +94,7 @@ const LoginForm = () => {
             </Form.Item>
           </Form>
           <Typography.Text className="login-register">
-            ¿No te has registrado? <a href="/register">Regístrate</a>
+            ¿No te has registrado? <Link href="/register">Regístrate</Link>
           </Typography.Text>
         </Card>
       </Col>
