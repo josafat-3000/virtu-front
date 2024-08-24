@@ -1,14 +1,13 @@
 // userSlice.js
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-const BACKEND_URL = import.meta.env.BACKEND_URL;
 
 export const loginUser = createAsyncThunk(
   "user/login",
   async (data, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${BACKEND_URL}auth/login`, //corregir en produccion 
+        `https://virtu-back.onrender.com/auth/login`, //corregir en produccion 
         data,
         { withCredentials: true }
       );

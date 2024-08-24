@@ -2,11 +2,10 @@
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-const BACKEND_URL = import.meta.env.BACKEND_URL;
 
 // Acción asincrónica para obtener los datos
 export const fetchAccessLogs = createAsyncThunk('accessLogs/fetchAccessLogs', async () => {
-  const response = await axios.get(`${BACKEND_URL}accesslogs`,{ withCredentials: true });  return response.data;
+  const response = await axios.get(`https://virtu-back.onrender.com/accesslogs`,{ withCredentials: true });  return response.data;
 });
 
 const accessLogsSlice = createSlice({
