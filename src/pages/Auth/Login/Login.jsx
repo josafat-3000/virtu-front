@@ -1,57 +1,42 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Card, Typography, Row, Col } from 'antd';
+import { Form, Input, Button, Card, Typography, Row, Col, message } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import './LoginForm.css'; // Archivo de estilos
-import logo from '../../assets/virtu.png'; // Ruta de la imagen del logo
+import './LoginForm.css';
+import logo from '../../../assets/virtu.png';
 import { useNavigate } from 'react-router-dom';
-const { Title } = Typography;
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../../store/userSlice';
+import { loginUser } from '../../../store/userSlice';
+
+const { Title } = Typography;
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => state.user.loading);
+  const error = useSelector((state) => state.user.error);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
-
-  const { loading, err } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-
-
-  const handleSignIn = async (values) => {
-    setError('');
-
-    let data = { email, password };
-    dispatch(loginUser(data)).then((result) => {
-      if (result.payload) {
-        setEmail('');
-        setPassword('');
-        navigate('/');
-      } else {
-        navigate('/login');
-      }
-    });
-
-    // Aquí iría la lógica para iniciar sesión, por ejemplo:
-    // const { data, error } = await supabase.auth.signInWithPassword({
-    //   email: values.email,
-    //   password: values.password,
-    // });
-
-    if (error) {
-      setError(error.message);
-    } else {
+  const handleSignIn = async () => {
+    try {
+      await dispatch(loginUser({ email, password })).unwrap();
+      setEmail('');
+      setPassword('');
       navigate('/');
+    } catch (err) {
+      message.error({
+        content: 'Error al iniciar sesión',
+        duration: 3, // Duración en segundos antes de que desaparezca
+        className: 'login-error-message',
+      });
     }
   };
 
   return (
     <Row justify="center" align="middle" className="login-container">
       <Col xs={22} sm={18} md={12} lg={10} xl={8}>
-        <Card
-          className="login-card"
-        >
+        <Card className="login-card">
           <div className="login-logo">
             <img src={logo} alt="Logo" className="logo-image" />
             <LockOutlined className="lock-icon" />
@@ -92,11 +77,6 @@ const LoginForm = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Item>
-            {error && (
-              <Typography.Text type="danger" className="login-error">
-                {error}
-              </Typography.Text>
-            )}
             <Form.Item className="login-remember">
               <a href="#" className="login-forgot">¿Olvidaste tu contraseña?</a>
             </Form.Item>
@@ -106,10 +86,10 @@ const LoginForm = () => {
                 htmlType="submit"
                 className="login-button"
                 size="large"
+                loading={loading}
               >
                 {loading ? 'Iniciando sesión' : 'Iniciar Sesión'}
               </Button>
-              {err && (<div>Error</div>)}
             </Form.Item>
           </Form>
           <Typography.Text className="login-register">

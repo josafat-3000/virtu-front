@@ -6,13 +6,11 @@ const ProtectedRoute = ({ children, redirectAuthenticatedTo }) => {
   const user = useSelector((state) => state.user.user);
 
   if (user && redirectAuthenticatedTo) {
-    console.log(user)
     return <Navigate to={redirectAuthenticatedTo}  />;
   }
 
   if (!user && !redirectAuthenticatedTo) {
-    console.log(user, "")
-    return <Navigate to="/login" replace={true} />;
+    return <Navigate to="/login" replace={false} />;
   }
 
   return children;

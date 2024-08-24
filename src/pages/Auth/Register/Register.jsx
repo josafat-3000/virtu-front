@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Button, Card, Typography, Row, Col } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons';
 import './Register.css'; // Archivo de estilos
-import logo from '../../assets/virtu.png'; // Ruta de la imagen del logo
+import logo from '../../../assets/virtu.png'; // Ruta de la imagen del logo
 import { useNavigate } from 'react-router-dom';
 
 const { Title } = Typography;
