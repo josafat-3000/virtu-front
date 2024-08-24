@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const fetchAllVisits = createAsyncThunk('visits/fetchAllVisits', async () => {
-    const response = await axios.get('http://192.168.0.6:3000/api/v1/visits',{ withCredentials: true }); // Asegúrate de que el endpoint sea correcto
+    const response = await axios.get(`${process.env.BACKEND_URL}visits`,{ withCredentials: true }); // Asegúrate de que el endpoint sea correcto
     return response.data;
   });
 

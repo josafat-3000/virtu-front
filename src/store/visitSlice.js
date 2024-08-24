@@ -5,7 +5,7 @@ import axios from 'axios';
 
 // Thunk para cargar los conteos de visitas desde la API
 export const fetchVisitStats = createAsyncThunk('visits/fetchVisitStats', async () => {
-  const response = await axios.get('http://192.168.0.6:3000/api/v1/visits/count',{ withCredentials: true }); // Asegúrate de que el endpoint sea correcto
+  const response = await axios.get(`${process.env.BACKEND_URL}visits/count`,{ withCredentials: true }); // Asegúrate de que el endpoint sea correcto
   return response.data;
 });
 

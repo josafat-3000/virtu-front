@@ -5,7 +5,7 @@ import axios from 'axios';
 
 // Acción asincrónica para obtener los datos
 export const fetchAccessLogs = createAsyncThunk('accessLogs/fetchAccessLogs', async () => {
-  const response = await axios.get('http://192.168.0.6:3000/api/v1/accesslogs',{ withCredentials: true });  return response.data;
+  const response = await axios.get(`${process.env.BACKEND_URL}accesslogs`,{ withCredentials: true });  return response.data;
 });
 
 const accessLogsSlice = createSlice({
