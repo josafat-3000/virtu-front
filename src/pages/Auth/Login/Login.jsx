@@ -17,6 +17,7 @@ const LoginForm = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  console.log(import.meta.env.BACKEND_URL)
 
   const handleSignIn = async () => {
     try {
