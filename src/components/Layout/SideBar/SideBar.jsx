@@ -12,7 +12,7 @@ import {
 import { useMediaQuery } from 'react-responsive';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import './sidebar.css';
+import './SideBar.css';
 
 const { Text } = Typography;
 const { Sider } = Layout;
