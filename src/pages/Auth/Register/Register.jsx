@@ -16,16 +16,31 @@ const RegisterForm = () => {
   const [success, setSuccess] = useState('');
 
   const handleRegister = async (values) => {
-    setError('');
-    setSuccess('');
+    try {
+      const response = await axios.post(
+        'https://virtu-back.onrender.com/api/v1/auth/register',
+        {
+          username: values.username,
+          email: values.email,
+          password: values.password,
+        },
+        {
+          withCredentials: true, // Incluir credenciales en la solicitud
+        }
+      );
 
-    if (error) {
-      setError(error.message);
-    } else {
-      setSuccess('Registro exitoso. Por favor, revisa tu correo electrónico para la confirmación.');
-      form.resetFields();
-      // Redirigir o hacer algo después del registro exitoso
-      navigate('/login');
+      if (response.status === 200) {
+        setSuccess('Registro exitoso. Por favor, revisa tu correo electrónico para la confirmación.');
+        // Limpiar el formulario
+        form.resetFields();
+        // Redirigir al usuario después del registro exitoso
+        navigate('/login');
+      } else {
+        setError('Error en el registro. Por favor, intenta nuevamente.');
+      }
+    } catch (err) {
+      // Si el servidor devuelve un error, lo mostramos
+      setError(err.response?.data?.message || 'Error en la conexión. Por favor, intenta nuevamente.');
     }
   };
 
