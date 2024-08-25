@@ -80,25 +80,30 @@ const Configuracion = () => {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
+      width: 50,
     },
     {
       title: 'Nombre',
       dataIndex: 'name',
       key: 'name',
+      width: 150,
     },
     {
       title: 'Correo Electrónico',
       dataIndex: 'email',
       key: 'email',
+      width: 200,
     },
     {
       title: 'Rol',
       dataIndex: 'role',
       key: 'role',
+      width: 100,
     },
     {
       title: 'Acciones',
       key: 'actions',
+      width: 100,
       render: (text, record) => (
         <div>
           <Button
@@ -130,6 +135,7 @@ const Configuracion = () => {
           columns={columns}
           dataSource={users}
           rowKey="id"
+          scroll={{ x: 600 }}
         />
       </Card>
 

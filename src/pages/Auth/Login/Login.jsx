@@ -94,7 +94,7 @@ const LoginForm = () => {
             </Form.Item>
           </Form>
           <Typography.Text className="login-register">
-            ¿No te has registrado? <Link href="/register">Regístrate</Link>
+            ¿No te has registrado? <Link to="/register">Regístrate</Link>
           </Typography.Text>
         </Card>
       </Col>
