@@ -28,7 +28,7 @@ const HeaderComponent = () => (
         style={{
             margin: '15px',
             display: 'flex',
-            justifyContent: 'space-between',
+            justifyContent: 'space-around',
             alignItems: 'center',
             padding: '0 30px',
             position: 'sticky',
@@ -42,24 +42,7 @@ const HeaderComponent = () => (
         <div className="header-left">
             <img src={logo} alt="Logo" className="header-logo-image" />
         </div>
-        <div className="header-right">
-            <Button
-                type="text"
-                icon={<BellOutlined />}
-                className="notification-icon"
-            />
-            <Dropdown
-                menu={{
-                    items,
-                }}
-            >
-                <Button
-                    type="text"
-                    icon={<UserOutlined />}
-                    className="user-button"
-                />
-            </Dropdown>
-        </div>
+        
     </Header>
 );
 

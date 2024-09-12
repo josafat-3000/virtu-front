@@ -1,10 +1,7 @@
 import React, {useEffect} from "react";
 import { Card, Table, Empty, Row, Col, Typography } from "antd";
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchAccessLogs } from "../../store/accessLogsSlice";
 import { fetchAllVisits } from "../../store/allVisitSlice";
-
-import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 
@@ -107,53 +104,10 @@ const columns = [
 ];
 
 
-const columns2 = [
-    {
-        title: 'ID',
-        dataIndex: 'id',
-        key: 'id',
-    },
-    {
-        title: 'Usuario',
-        dataIndex: 'Users', // Datos del usuario
-        key: 'userName',
-        render: (user) => user ? user.name : 'No disponible', // Ajusta 'name' si es necesario
-    },
-    {
-        title: 'Acción',
-        dataIndex: 'access_type', // Tipo de acceso (check-in/check-out)
-        key: 'accessType',
-        render: (text) => text === 'check_in' ? (
-            <span style={{ color: 'green' }}>
-                <UserAddOutlined /> Entrada
-            </span>
-        ) : (
-            <span style={{ color: 'red' }}>
-                <UserDeleteOutlined /> Salida
-            </span>
-        ),
-    },
-    {
-        title: 'Fecha y Hora',
-        dataIndex: 'timestamp',
-        key: 'timestamp',
-        render: (text) => new Date(text).toLocaleString(), // Formatea la fecha y hora
-    },
-    {
-        title: 'Detalles de Visita',
-        dataIndex: 'Visits', // Datos de la visita
-        key: 'visitReason',
-        render: (visit) => visit ? visit.visit_reason : 'No disponible', // Ajusta 'visit_reason' si es necesario
-    },
-];
 
 function Registros() {
     const dispatch = useDispatch();
-    const { data, loading } = useSelector((state) => state.accessLogs);
     const { visitas, loadingVisits} = useSelector((state) => state.allVisits);
-    useEffect(() => {
-        dispatch(fetchAccessLogs()); // Obtén los datos al montar el componente
-    }, [dispatch]);
 
     useEffect(() => {
         dispatch(fetchAllVisits()); // Obtén los datos al montar el componente
@@ -174,18 +128,6 @@ function Registros() {
                 />
             </Card>
 
-            <Card style={{ marginTop: "16px", borderRadius: '10px', boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.2)' }} bordered={true} title="Historial de eventos" >
-                <Table
-                    columns={columns2}
-                    dataSource={data}
-                    loading={loading}
-                    locale={{
-                        emptyText: <Empty description="No hay datos disponibles" />,
-                    }}
-                    rowKey="id"
-                    scroll={{ x: true }} // Permite el desplazamiento horizontal
-                />
-            </Card>
 
         </div>
     );

@@ -1,47 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, Button, Card, Typography, Row, Col } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons';
-import './Register.css'; // Archivo de estilos
-import logo from '../../../assets/virtu.png'; // Ruta de la imagen del logo
+import './Register.css';
+import logo from '../../../assets/virtu.png';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUser } from '../../../store/registerSlice.js';
 
 const { Title } = Typography;
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const dispatch = useDispatch();
+  const { loading, error, success } = useSelector((state) => state.register);
 
-  const handleRegister = async (values) => {
-    try {
-      const response = await axios.post(
-        'https://virtu-back.onrender.com/api/v1/auth/register',
-        {
-          username: values.username,
-          email: values.email,
-          password: values.password,
-        },
-        {
-          withCredentials: true, // Incluir credenciales en la solicitud
-        }
-      );
+  const [form] = Form.useForm();
 
-      if (response.status === 200) {
-        setSuccess('Registro exitoso. Por favor, revisa tu correo electrónico para la confirmación.');
-        // Limpiar el formulario
-        form.resetFields();
-        // Redirigir al usuario después del registro exitoso
-        navigate('/login');
-      } else {
-        setError('Error en el registro. Por favor, intenta nuevamente.');
-      }
-    } catch (err) {
-      // Si el servidor devuelve un error, lo mostramos
-      setError(err.response?.data?.message || 'Error en la conexión. Por favor, intenta nuevamente.');
+  useEffect(() => {
+    if (success) {
+      form.resetFields(); // Limpiar el formulario si el registro fue exitoso
+      navigate('/login'); // Redirigir después del registro exitoso
     }
+  }, [success, navigate, form]);
+
+  const handleRegister = (values) => {
+    console.log(values)
+    dispatch(registerUser(values));
   };
 
   return (
@@ -60,20 +44,19 @@ const RegisterForm = () => {
           </Typography.Text>
           <Form
             name="register"
+            form={form}
             initialValues={{ remember: true }}
             onFinish={handleRegister}
             className="register-form"
           >
             <Form.Item
-              name="username"
+              name="name"
               rules={[{ required: true, message: 'Por favor, introduce tu nombre de usuario' }]}
             >
               <Input
                 prefix={<UserOutlined />}
                 placeholder="Nombre de Usuario"
                 size="large"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
               />
             </Form.Item>
             <Form.Item
@@ -84,8 +67,6 @@ const RegisterForm = () => {
                 prefix={<MailOutlined />}
                 placeholder="Correo Electrónico"
                 size="large"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
               />
             </Form.Item>
             <Form.Item
@@ -96,8 +77,6 @@ const RegisterForm = () => {
                 prefix={<LockOutlined />}
                 placeholder="Contraseña"
                 size="large"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Item>
             {error && (
@@ -116,9 +95,9 @@ const RegisterForm = () => {
                 htmlType="submit"
                 className="register-button"
                 size="large"
-                
+                loading={loading}
               >
-                Registrarse
+                {loading ? 'Registrando...' : 'Registrarse'}
               </Button>
             </Form.Item>
           </Form>

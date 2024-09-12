@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Layout, Menu, Avatar, Typography, Button } from 'antd';
+import { Layout, Menu, Avatar, Typography, Button, Modal } from 'antd';
 import {
   HomeOutlined,
   CalendarOutlined,
@@ -11,7 +11,8 @@ import {
 } from '@ant-design/icons';
 import { useMediaQuery } from 'react-responsive';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutUser, clearUser } from '../../../store/userSlice'; // Importa la acción de logout
 import './SideBar.css';
 
 const { Text } = Typography;
@@ -19,9 +20,11 @@ const { Sider } = Layout;
 
 const Sidebar = ({ collapsed, onCollapse }) => {
   const [profilePictureUrl, setProfilePictureUrl] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false); // Estado para mostrar el modal
   const userName = useSelector((state) => state.user.user.name);
   const isSmallerThanMd = useMediaQuery({ maxWidth: 768 });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const sidebarRef = useRef(null);
 
   // Maneja clics fuera del Sidebar
@@ -54,7 +57,7 @@ const Sidebar = ({ collapsed, onCollapse }) => {
         navigate('/configuracion');
         break;
       case '5':
-        navigate('/salir');
+        showModal(); // Mostrar modal para confirmar logout
         break;
       case '6':
         navigate('/acciones');
@@ -66,6 +69,30 @@ const Sidebar = ({ collapsed, onCollapse }) => {
     if (isSmallerThanMd) {
       onCollapse(true);
     }
+  };
+
+  // Muestra el modal de confirmación de logout
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  // Maneja la confirmación de logout
+  const handleOk = async () => {
+    try {
+      await dispatch(logoutUser()).unwrap(); // Ejecuta la acción de logout en Redux
+      sessionStorage.clear(); // Limpia sessionStorage
+      dispatch(clearUser()); // Limpia el estado del usuario en Redux
+      navigate('/login'); // Redirige al login
+    } catch (error) {
+      console.error('Error during logout:', error);
+    } finally {
+      setIsModalVisible(false); // Cierra el modal
+    }
+  };
+
+  // Cierra el modal sin hacer logout
+  const handleCancel = () => {
+    setIsModalVisible(false);
   };
 
   return (
@@ -130,6 +157,18 @@ const Sidebar = ({ collapsed, onCollapse }) => {
           onClick={handleMenuClick}
         />
       </Sider>
+
+      {/* Modal de confirmación para logout */}
+      <Modal
+        title="Confirm Logout"
+        open={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText="Yes, Logout"
+        cancelText="Cancel"
+      >
+        <p>Are you sure you want to logout?</p>
+      </Modal>
     </>
   );
 };

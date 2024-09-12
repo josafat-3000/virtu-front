@@ -10,6 +10,7 @@ import Registros from './pages/Registros/Registros';
 import AccionsPage from './pages/Acciones/Acciones';
 import ProfilePage from './pages/Profile/Profile';
 import Configuracion from './pages/Configuracion/Configuracion';
+import Forgot from './pages/Auth/ForgotPassword/Forgot';
 const App = () => {
   return (
     <Router>
@@ -31,6 +32,14 @@ const App = () => {
           }
         />
         <Route
+          path="/forgot"
+          element={
+            <ProtectedRoute redirectAuthenticatedTo="/">
+              <Forgot />
+            </ProtectedRoute>
+          }
+        ></Route>
+        <Route
           path="/"
           element={
             <ProtectedRoute>
@@ -39,11 +48,11 @@ const App = () => {
           }
         >
           <Route index element={<Dashboard></Dashboard>} />
-          <Route path='/registros'element={<Registros></Registros>}/>
-          <Route path='/acciones'element={<AccionsPage />}/>
-          <Route path='/perfil'element={<ProfilePage></ProfilePage>}/>
-          <Route path='/configuracion'element={<Configuracion></Configuracion>}/>
-          <Route path='/salir'element={<h1>Salir</h1>}/>
+          <Route path='/registros' element={<Registros></Registros>} />
+          <Route path='/acciones' element={<AccionsPage />} />
+          <Route path='/perfil' element={<ProfilePage></ProfilePage>} />
+          <Route path='/configuracion' element={<Configuracion></Configuracion>} />
+
         </Route>
       </Routes>
     </Router>

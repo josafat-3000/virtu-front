@@ -3,8 +3,7 @@ import {
   EyeOutlined, ClockCircleOutlined, LogoutOutlined, CalendarOutlined
 } from '@ant-design/icons';
 import { Card, Table, Empty, Statistic, Row, Col, Typography } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchAccessLogs } from '../../store/accessLogsSlice.js'; // Ajusta la ruta según sea necesario
+import { useSelector, useDispatch } from 'react-redux';// Ajusta la ruta según sea necesario
 import { fetchVisitStats } from '../../store/visitSlice.js'
 import './Dashboard.css';
 import { UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
@@ -55,13 +54,8 @@ const columns = [
 
 const Dashboard = () => {
   const dispatch = useDispatch();
-  const { data, loading } = useSelector((state) => state.accessLogs);
   const user = useSelector((state) => state.user.user.name);
   const { pending, in_progress } = useSelector((state) => state.visits);
-
-  useEffect(() => {
-    dispatch(fetchAccessLogs()); // Obtén los datos al montar el componente
-  }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchVisitStats()); // Obtén los datos al montar el componente
@@ -146,18 +140,6 @@ const Dashboard = () => {
         </Col>
       </Row>
 
-      <Card bordered={true} title="Eventos recientes" style={{ marginTop:"16px", borderRadius: '10px', boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.2)'}}>
-        <Table
-          columns={columns}
-          dataSource={data}
-          loading={loading}
-          locale={{
-            emptyText: <Empty description="No hay datos disponibles" />,
-          }}
-          rowKey="id"
-          scroll={{ x: true }} // Permite el desplazamiento horizontal
-        />
-      </Card>
     </div>
   );
 };

@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+const url_visits = `${import.meta.env.VITE_BACKEND_URL}/api/v1/visits`;
 
 export const fetchAllVisits = createAsyncThunk('visits/fetchAllVisits', async () => {
-    const response = await axios.get(`https://virtu-back.onrender.com/api/v1/visits`,{ withCredentials: true }); // Asegúrate de que el endpoint sea correcto
+    const response = await axios.get(url_visits,{ withCredentials: true }); // Asegúrate de que el endpoint sea correcto
     return response.data;
   });
 

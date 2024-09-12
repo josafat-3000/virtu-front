@@ -3,8 +3,12 @@ import { persistStore, persistReducer } from 'redux-persist';
 import sesionStorage from 'redux-persist/lib/storage/session';
 import userReducer from './userSlice';
 import visitsReducer from './visitSlice';
-import accessLogsReducer from './accessLogsSlice';
-import allVisitSlice from './allVisitSlice';
+import allVisitReducer from './allVisitSlice';
+import registerReducer from './registerSlice';
+import createVisitReducer from './createVisitSlice';
+import scanReducer from './scanSlice';
+import configReducer from './configSlice';
+
 const persistConfig = {
   key: 'root',
   storage: sesionStorage,
@@ -16,8 +20,11 @@ const store = configureStore({
   reducer: {
     user: persistedReducer,
     visits: visitsReducer,
-    accessLogs: accessLogsReducer,
-    allVisits: allVisitSlice,
+    allVisits: allVisitReducer,
+    register: registerReducer,
+    createVisit: createVisitReducer,
+    scan: scanReducer,
+    config: configReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

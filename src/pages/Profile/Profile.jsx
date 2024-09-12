@@ -1,122 +1,47 @@
-import React, { useState } from 'react';
-import { Card, Form, Input, Button, Upload, Row, Col, Typography, notification } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Card, Typography, Space, Spin, Avatar, Row, Col } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import { fetchUser } from '../../store/configSlice';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const ProfilePage = () => {
-  const [form] = Form.useForm();
-  const [fileList, setFileList] = useState([]);
+  const dispatch = useDispatch();
+  const currentUserId = useSelector((state) => state.user.user.id);
+  const { user } = useSelector((state) => state.config);
 
-  const handleFinish = (values) => {
-    // Lógica para guardar la información del perfil
-    console.log('Received values of form: ', values);
-    notification.success({
-      message: 'Perfil actualizado',
-      description: 'Tu perfil ha sido actualizado con éxito.',
-    });
-  };
 
-  const handleFileChange = (info) => {
-    if (info.file.status === 'done') {
-      notification.success({
-        message: 'Foto de perfil actualizada',
-        description: 'Tu foto de perfil ha sido actualizada con éxito.',
-      });
+  useEffect(() => {
+    if (currentUserId) {
+      console.log("Fetching user data for ID:", currentUserId);
+      dispatch(fetchUser(currentUserId));
     }
-  };
+  }, [dispatch, currentUserId]);
 
   return (
-    <div style={{ padding: '24px' }}>
-      <Title level={2}>Perfil</Title>
-      <Card style={{ marginBottom: '16px' }}>
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleFinish}
-          initialValues={{
-            name: 'Juan Pérez',
-            email: 'juan@example.com',
-            phone: '+1234567890',
-          }}
-        >
-          <Row gutter={16}>
-            <Col span={24} md={8}>
-              <Form.Item label="Foto de Perfil">
-                <Upload
-                  action="/upload" // URL del servidor para manejar la subida
-                  listType="picture-card"
-                  fileList={fileList}
-                  onChange={handleFileChange}
-                  beforeUpload={() => false}
-                >
-                  {fileList.length < 1 && <UploadOutlined />}
-                </Upload>
-              </Form.Item>
+    <div style={{ margin: '0 auto', padding: '20px' }}>
+      <Title level={2}>Información Personal</Title>
+      {user && (
+        <Card bordered={false} style={{ boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' }}>
+          <Row gutter={16} align="middle">
+            <Col xs={24} sm={8} style={{ textAlign: 'center' }}>
+              <Avatar size={120} icon={<UserOutlined />} />
             </Col>
-            <Col span={24} md={16}>
-              <Form.Item
-                name="name"
-                label="Nombre Completo"
-                rules={[{ required: true, message: 'Por favor ingresa tu nombre completo' }]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                name="email"
-                label="Correo Electrónico"
-                rules={[{ type: 'email', message: 'El correo electrónico no es válido' }]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                name="phone"
-                label="Teléfono"
-                rules={[{ required: true, message: 'Por favor ingresa tu número de teléfono' }]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                name="address"
-                label="Dirección"
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" htmlType="submit">Guardar Cambios</Button>
-              </Form.Item>
+            <Col xs={24} sm={16}>
+              <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                <Text><strong>Nombre:</strong>      {user.name}</Text>
+                <Text><strong>Correo:</strong>     {user.email}</Text>
+                <Text><strong>Rol:</strong>      {user.role_id === 1 ? 'Admin' :
+                  user.role_id === 3 ? 'Guard' :
+                    'User'}</Text>
+                <Text><strong>ID:</strong>        {user.id}</Text>
+                <Text><strong>Teléfono:</strong>     {user.phone || 'N/A'}</Text>
+              </Space>
             </Col>
           </Row>
-        </Form>
-      </Card>
-
-      <Card title="Configuración de la Cuenta" style={{ marginBottom: '16px' }}>
-        <Button type="link">Cambiar Contraseña</Button>
-        <Button type="link">Verificar Correo Electrónico</Button>
-        <Button type="link" danger>Eliminar Cuenta</Button>
-      </Card>
-
-      <Card title="Preferencias" style={{ marginBottom: '16px' }}>
-        <Button type="link">Cambiar Tema</Button>
-        <Button type="link">Configurar Notificaciones</Button>
-        <Button type="link">Seleccionar Idioma</Button>
-      </Card>
-
-      <Card title="Seguridad" style={{ marginBottom: '16px' }}>
-        <Button type="link">Configurar 2FA</Button>
-        <Button type="link">Revisar Actividad Reciente</Button>
-      </Card>
-
-      <Card title="Integraciones" style={{ marginBottom: '16px' }}>
-        <Button type="link">Conectar Redes Sociales</Button>
-        <Button type="link">Gestionar Aplicaciones Vinculadas</Button>
-      </Card>
-
-      <Card title="Soporte y Ayuda">
-        <Button type="link">Contacto Soporte Técnico</Button>
-        <Button type="link">FAQ</Button>
-        <Button type="link">Enviar Feedback</Button>
-      </Card>
+        </Card>
+      )}
     </div>
   );
 };

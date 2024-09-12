@@ -79,7 +79,7 @@ const LoginForm = () => {
               />
             </Form.Item>
             <Form.Item className="login-remember">
-              <a href="#" className="login-forgot">¿Olvidaste tu contraseña?</a>
+              <Link to="/forgot" className="login-forgot">¿Olvidaste tu contraseña?</Link>
             </Form.Item>
             <Form.Item>
               <Button

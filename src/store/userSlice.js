@@ -2,13 +2,32 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const url_login = `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/login`;
+const url_logout = `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/logout`;
+
 export const loginUser = createAsyncThunk(
   "user/login",
   async (data, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `https://virtu-back.onrender.com/api/v1/auth/login`, //corregir en produccion 
+        url_login, 
         data,
+        { withCredentials: true }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  "user/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        url_logout, 
+        {}, 
         { withCredentials: true }
       );
       return response.data;
@@ -26,7 +45,7 @@ const userSlice = createSlice({
     error: null,
   },
   reducers: {
-    logout: (state) => {
+    clearUser: (state) => {
       state.user = null;
     },
   },
@@ -46,9 +65,22 @@ const userSlice = createSlice({
         state.loading = false;
         state.user = null;
         state.error = action.payload?.message || 'Error al iniciar sesión';
+      })
+      .addCase(logoutUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.loading = false;
+        state.user = null;  // Limpiar el estado de Redux
+        state.error = null;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || 'Error al cerrar sesión';
       });
   },
 });
 
-export const { logout } = userSlice.actions;
+export const { clearUser } = userSlice.actions;
 export default userSlice.reducer;

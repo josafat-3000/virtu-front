@@ -3,9 +3,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const url_count = `${import.meta.env.VITE_BACKEND_URL}/api/v1/visits/count`
+
 // Thunk para cargar los conteos de visitas desde la API
 export const fetchVisitStats = createAsyncThunk('visits/fetchVisitStats', async () => {
-  const response = await axios.get(`https://virtu-back.onrender.com/api/v1/visits/count`,{ withCredentials: true }); // Asegúrate de que el endpoint sea correcto
+  const response = await axios.get(url_count,{ withCredentials: true }); // Asegúrate de que el endpoint sea correcto
   return response.data;
 });
 
