@@ -115,7 +115,7 @@ function Registros() {
     return (
         <div style={{ margin: '16px' }}>
 
-            <Card style={{ marginTop: '16px', marginTop: "16px", borderRadius: '10px', boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.2)' }} bordered={true} title="Historial de visitas" >
+            <Card style={{ marginTop: '16px', borderRadius: '10px', boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.2)' }} bordered={true} title="Historial de visitas" >
                 <Table
                     columns={columns}
                     dataSource={visitas}
